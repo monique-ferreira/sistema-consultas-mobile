@@ -1,49 +1,60 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
+import { StatusBar } from "expo-status-bar";
+
 import { Especialidade } from "./src/types/especialidade";
 import { Paciente } from "./src/types/paciente";
 import { Medico } from "./src/interfaces/medico";
 import { Consulta } from "./src/interfaces/consulta";
 
+import { ConsultaCard } from "./src/components";
+
 export default function App() {
 
   const cardiologia: Especialidade = {
-  id: 1,
-  nome: "Cardiologia",
-  descricao: "Cuidados com o coração",
+    id: 1,
+    nome: "Cardiologia",
+    descricao: "Cuidados com o coração",
   };
 
   const medico1: Medico = {
-  id: 1,
-  nome: "Dr. Roberto Silva",
-  crm: "CRM12345",
-  especialidade: cardiologia,
-  ativo: true,
+    id: 1,
+    nome: "Dr. Roberto Silva",
+    crm: "CRM12345",
+    especialidade: cardiologia,
+    ativo: true,
   };
 
   const paciente1: Paciente = {
-  id: 1,
-  nome: "Carlos Andrade",
-  cpf: "123.456.789-00",
-  email: "carlos@email.com",
-  telefone: "(11) 98765-4321",
+    id: 1,
+    nome: "Carlos Andrade",
+    cpf: "123.456.789-00",
+    email: "carlos@email.com",
+    telefone: "(11) 98765-4321",
   };
 
   const [consulta, setConsulta] = useState<Consulta>({
-  id: 1,
-  medico: medico1,
-  paciente: paciente1,
-  data: new Date(2026, 2, 10),
-  valor: 350,
-  status: "agendada",
-  observacoes: "Consulta de rotina",
+    id: 1,
+    medico: medico1,
+    paciente: paciente1,
+    data: new Date(2026, 2, 10),
+    valor: 350,
+    status: "agendada",
+    observacoes: "Consulta de rotina",
   });
 
   function confirmarConsulta() {
-  setConsulta({
-    ...consulta,
-    status: "confirmada",
-  });
+    setConsulta({
+      ...consulta,
+      status: "confirmada",
+    });
+  }
+
+  function cancelarConsulta() {
+    setConsulta({
+      ...consulta,
+      status: "cancelada"
+    });
   }
 
   function formatarValor(valor: number): string {
@@ -59,17 +70,11 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text style={styles.titulo}>Sistema de Consultas</Text>
-      <View style={styles.card}>
-        <Text>Paciente: {consulta.paciente.nome}</Text>
-        <Text>Medico: {consulta.medico.nome}</Text>
-        <Text>Data: {formatarData(consulta.data)}</Text>
-        <Text>Status: {consulta.status}</Text>
-        { consulta.status === "agendada" && (
-          <View style={styles.button}>
-            <Button title="Confirmar Consulta" onPress={confirmarConsulta} color={"#91C787"}/>
-          </View>
-        )}
-      </View>
+      <ConsultaCard 
+        consulta={consulta}
+        onConfirmar={confirmarConsulta}
+        onCancelar={cancelarConsulta}
+      />
     </View>
   );
 }
@@ -90,16 +95,4 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#91C787"
   },
-  card: {
-    width: "80%",
-    padding: 24,
-    borderWidth: 1,
-    borderRadius: 8,
-    borderColor: "#d4d4d4",
-  },
-  button: {
-    marginTop: 8,
-    borderRadius: 8,
-    overflow: "hidden",
-  }
 });
