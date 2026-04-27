@@ -95,4 +95,30 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#91C787"
   },
+  scrollContent: {
+    padding: 20,
+    paddingTop: 60,
+  },
+  header: {
+    alignItems: "center",
+    marginBottom: 24,
+  },
+  subtitulo: {
+    fontSize: 18,
+    color: "#202020",
+    opacity: 0.9,
+  },
+  rodape: {
+    marginTop: 24,
+    padding: 16,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 12,
+  },
+  rodapeTexto: {
+    fontSize: 12,
+    color: "#202020",
+    textAlign: "center",
+    lineHeight: 18,
+    marginBottom: 4,
+  },
 });
