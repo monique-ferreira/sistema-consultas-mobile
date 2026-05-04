@@ -1,79 +1,130 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import { StatusBar } from "expo-status-bar";
-
 import { Especialidade } from "./src/types/especialidade";
 import { Paciente } from "./src/types/paciente";
+import { listarPacientes } from "./src/services/pacienteService";
 import { Medico } from "./src/interfaces/medico";
+import { listarMedicos } from "./src/services/medicoService";
 import { Consulta } from "./src/interfaces/consulta";
 
 import { ConsultaCard } from "./src/components";
 
 export default function App() {
+  const [medicos, setMedicos] = useState<Medico[]>([]);
+  const [pacientes, setPacientes] = useState<Paciente[]>([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState<string | null>(null);
 
-  const cardiologia: Especialidade = {
-    id: 1,
-    nome: "Cardiologia",
-    descricao: "Cuidados com o coração",
-  };
+  useEffect(() => {
+    carregarDados();
+  }, []);
 
-  const medico1: Medico = {
-    id: 1,
-    nome: "Dr. Roberto Silva",
-    crm: "CRM12345",
-    especialidade: cardiologia,
-    ativo: true,
-  };
+  async function carregarDados() {
+    try {
+      setCarregando(true);
+      setErro(null);
 
-  const paciente1: Paciente = {
-    id: 1,
-    nome: "Carlos Andrade",
-    cpf: "123.456.789-00",
-    email: "carlos@email.com",
-    telefone: "(11) 98765-4321",
-  };
+      const [listaMedicos, listaPacientes] = await Promise.all([
+        listarMedicos(),
+        listarPacientes(),
+      ]);
 
-  const [consulta, setConsulta] = useState<Consulta>({
-    id: 1,
-    medico: medico1,
-    paciente: paciente1,
-    data: new Date(2026, 2, 10),
-    valor: 350,
-    status: "agendada",
-    observacoes: "Consulta de rotina",
-  });
-
-  function confirmarConsulta() {
-    setConsulta({
-      ...consulta,
-      status: "confirmada",
-    });
+      setMedicos(listaMedicos);
+      setPacientes(listaPacientes);
+    } catch (error) {
+      setErro(
+        "Não foi possível carregar os dados.\nVerifique se o backend está rodando em http://localhost:8080"
+      );
+    } finally {
+      setCarregando(false);
+    }
   }
 
-  function cancelarConsulta() {
-    setConsulta({
-      ...consulta,
-      status: "cancelada"
-    });
-  }
-
-  function formatarValor(valor: number): string {
-  return valor.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
-  }
-
-  function formatarData(data: Date): string {
-  return data.toLocaleDateString("pt-BR");
-  }
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>Sistema de Consultas</Text>
-      <ConsultaCard 
-        consulta={consulta}
-        onConfirmar={confirmarConsulta}
-        onCancelar={cancelarConsulta}
+      <StatusBar style="light" />
+
+      <FlatList
+        contentContainerStyle={styles.scrollContent}
+        data={[]}
+        renderItem={null}
+        ListHeaderComponent={
+          <>
+            {/* Cabeçalho */}
+            <View style={styles.header}>
+              <Text style={styles.titulo}>Sistema de Consultas</Text>
+              <Text style={styles.subtitulo}>Dados do Backend</Text>
+            </View>
+
+            {/* Indicador de carregamento */}
+            {carregando && (
+              <ActivityIndicator
+                size="large"
+                color="#fff"
+                style={{ marginTop: 40 }}
+              />
+            )}
+
+            {/* Mensagem de erro */}
+            {erro && (
+              <View style={styles.erroContainer}>
+                <Text style={styles.erroTexto}>{erro}</Text>
+              </View>
+            )}
+
+            {/* Lista de Médicos */}
+            {!carregando && !erro && (
+              <>
+                <Text style={styles.secaoTitulo}>
+                  👨‍⚕️ Médicos ({medicos.length})
+                </Text>
+                {medicos.map((medico) => (
+                  <View key={medico.id} style={styles.card}>
+                    <Text style={styles.cardNome}>{medico.nome}</Text>
+                    <Text style={styles.cardInfo}>CRM: {medico.crm}</Text>
+                    <Text style={styles.cardInfo}>
+                      {medico.especialidade?.nome ?? " - "}
+                    </Text>
+                    <View
+                      style={[
+                        styles.badge,
+                        medico.ativo ? styles.badgeAtivo : styles.badgeInativo,
+                      ]}
+                    >
+                      <Text style={styles.badgeTexto}>
+                        {medico.ativo ? "Ativo" : "Inativo"}
+                      </Text>
+                    </View>
+                  </View>
+                ))}
+
+                {/* Lista de Pacientes */}
+                <Text style={[styles.secaoTitulo, { marginTop: 24 }]}>
+                  👤 Pacientes ({pacientes.length})
+                </Text>
+                {pacientes.map((paciente) => (
+                  <View key={paciente.id} style={styles.card}>
+                    <Text style={styles.cardNome}>{paciente.nome}</Text>
+                    <Text style={styles.cardInfo}>CPF: {paciente.cpf}</Text>
+                    <Text style={styles.cardInfo}>{paciente.email}</Text>
+                    {paciente.telefone && (
+                      <Text style={styles.cardInfo}>
+                        Tel: {paciente.telefone}
+                      </Text>
+                    )}
+                  </View>
+                ))}
+              </>
+            )}
+          </>
+        }
       />
     </View>
   );
@@ -93,7 +144,63 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     width: "60%",
     textAlign: "center",
-    color: "#91C787"
+    color: "#91C787",
+  },
+  secaoTitulo: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#91c787",
+    marginBottom: 12,
+  },
+  card: {
+    width: "80%",
+    padding: 24,
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: "#d4d4d4",
+  },
+  cardNome: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 4,
+  },
+  cardInfo: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 2,
+  },
+  badge: {
+    alignSelf: "flex-start",
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    marginTop: 8,
+  },
+  badgeAtivo: {
+    backgroundColor: "#d4edda",
+  },
+  badgeInativo: {
+    backgroundColor: "#f8d7da",
+  },
+  badgeTexto: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  erroContainer: {
+    marginTop: 24,
+    padding: 16,
+    backgroundColor: "rgba(255, 80, 80, 0.2)",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "rgba(255, 80, 80, 0.5)",
+  },
+  erroTexto: {
+    fontSize: 14,
+    color: "rgba(255, 80, 80, 1)",
+    textAlign: "center",
+    lineHeight: 22,
   },
   scrollContent: {
     padding: 20,
@@ -104,7 +211,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   subtitulo: {
-    fontSize: 18,
+    fontSize: 14,
     color: "#202020",
     opacity: 0.9,
   },
