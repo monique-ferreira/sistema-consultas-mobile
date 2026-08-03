@@ -5,20 +5,58 @@ import {
   StyleSheet,
   FlatList,
   ActivityIndicator,
+  Modal,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { Especialidade } from "./src/types/especialidade";
+
 import { Paciente } from "./src/types/paciente";
-import { listarPacientes } from "./src/services/pacienteService";
 import { Medico } from "./src/interfaces/medico";
-import { listarMedicos } from "./src/services/medicoService";
 import { Consulta } from "./src/interfaces/consulta";
+
+import { listarMedicos } from "./src/services/medicoService";
+import { listarPacientes } from "./src/services/pacienteService";
+
+import {
+  listarConsultas,
+  agendarConsulta,
+  confirmarConsulta,
+  cancelarConsulta,
+  NovaConsulta,
+} from "./src/services/consultaService";
+
+const STATUS_CORES: Record<string, string> = {
+  agendada: "#e3f2fd",
+  confirmada: "#d4edda",
+  realizada: "#e8f5e9",
+  cancelada: "#f8d7da",
+};
+
+const STATUS_TEXTO_CORES: Record<string, string> = {
+  agendada: "#4c8fdb",
+  confirmada: "#48af60",
+  realizada: "#a27aec",
+  cancelada: "#d64756",
+};
 
 export default function App() {
   const [medicos, setMedicos] = useState<Medico[]>([]);
   const [pacientes, setPacientes] = useState<Paciente[]>([]);
+  const [consultas, setConsultas] = useState<Consulta[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
+
+  const [mostrarForm, setMostrarForm] = useState(false);
+  const [salvando, setSalvando] = useState(false);
+  const [formMedicoId, setFormMedicoId] = useState("");
+  const [formPacienteId, setFormPacienteId] = useState("");
+  const [formDataHora, setFormDataHora] = useState("2026-05-20T10:00:00");
+  const [formValor, setFormValor] = useState("");
+  const [formObservacoes, setFormObservacoes] = useState("");
 
   useEffect(() => {
     carregarDados();
@@ -29,19 +67,90 @@ export default function App() {
       setCarregando(true);
       setErro(null);
 
-      const [listaMedicos, listaPacientes] = await Promise.all([
+      const [listaMedicos, listaPacientes, listaConsultas] = await Promise.all([
         listarMedicos(),
         listarPacientes(),
+        listarConsultas(),
       ]);
 
       setMedicos(listaMedicos);
       setPacientes(listaPacientes);
+      setConsultas(listaConsultas);
     } catch (error) {
       setErro(
         "Não foi possível carregar os dados.\nVerifique se o backend está rodando em http://localhost:8080"
       );
     } finally {
       setCarregando(false);
+    }
+  }
+
+  function formatarDataHora(dataHora: string): string {
+    const data = new Date(dataHora);
+    const dia = data.toLocaleDateString("pt-BR");
+    const hora = data.toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    return `${dia} às ${hora}`;
+  }
+
+  async function handleAgendarConsulta() {
+    if (!formMedicoId || !formPacienteId || !formDataHora || !formValor) {
+      alert("Preencha todos os campos obrigatórios (*).");
+      return;
+    }
+
+    try {
+      setSalvando(true);
+
+      const novaConsulta: NovaConsulta = {
+        medicoId: Number(formMedicoId),
+        pacienteId: Number(formPacienteId),
+        dataHora: formDataHora,
+        status: "agendada",
+        valor: Number(formValor),
+        observacoes: formObservacoes || undefined,
+      };
+
+      const consultaCriada = await agendarConsulta(novaConsulta);
+      // Adiciona a nova consulta ao final da lista sem recarregar tudo
+      setConsultas((prev) => [...prev, consultaCriada]);
+
+      // Limpa e fecha o formulário
+      setFormMedicoId("");
+      setFormPacienteId("");
+      setFormDataHora("2026-05-20T10:00:00");
+      setFormValor("");
+      setFormObservacoes("");
+      setMostrarForm(false);
+    } catch (error) {
+      alert("Erro ao agendar consulta.\nVerifique os IDs de médico e paciente.");
+    } finally {
+      setSalvando(false);
+    }
+  }
+
+  async function handleConfirmarConsulta(consulta: Consulta) {
+    try {
+      const atualizada = await confirmarConsulta(consulta);
+      // Substitui a consulta antiga pela atualizada na lista
+      setConsultas((prev) =>
+        prev.map((c) => (c.id === atualizada.id ? atualizada : c))
+      );
+    } catch {
+      alert("Erro ao confirmar consulta.");
+    }
+  }
+
+  async function handleCancelarConsulta(consulta: Consulta) {
+    try {
+      const atualizada = await cancelarConsulta(consulta);
+      setConsultas((prev) =>
+        prev.map((c) => (c.id === atualizada.id ? atualizada : c))
+      );
+    } catch {
+      alert("Erro ao cancelar consulta.");
     }
   }
 
@@ -119,11 +228,176 @@ export default function App() {
                     )}
                   </View>
                 ))}
+
+                {/* ─── SEÇÃO DE CONSULTAS (NOVA) ─── */}
+                <View style={styles.secaoHeader}>
+                  <Text style={styles.secaoTituloConsultas}>
+                    📅 Consultas ({consultas.length})
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.botaoAgendar}
+                    onPress={() => setMostrarForm(true)}
+                  >
+                    <Text style={styles.botaoAgendarTexto}>+ Agendar</Text>
+                  </TouchableOpacity>
+                </View>
+
+                {consultas.map((consulta) => (
+                  <View key={consulta.id} style={styles.card}>
+                    {/* Badge de status colorido */}
+                    <View
+                      style={[
+                        styles.statusBadge,
+                        {
+                          backgroundColor:
+                            STATUS_CORES[consulta.status] ?? "#f0f0f0",
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.statusTexto,
+                          {
+                            color:
+                              STATUS_TEXTO_CORES[consulta.status] ?? "#333",
+                          },
+                        ]}
+                      >
+                        {consulta.status.toUpperCase()}
+                      </Text>
+                    </View>
+
+                    <Text style={styles.cardNome}>
+                      Dr(a). {consulta.medico?.nome}
+                    </Text>
+                    <Text style={styles.cardInfo}>
+                      👤 {consulta.paciente?.nome}
+                    </Text>
+                    <Text style={styles.cardInfo}>
+                      📅 {formatarDataHora(consulta.dataHora)}
+                    </Text>
+                    <Text style={styles.cardInfo}>
+                      💰{" "}
+                      {Number(consulta.valor).toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </Text>
+                    {consulta.observacoes && (
+                      <Text style={styles.cardObservacoes}>
+                        📝 {consulta.observacoes}
+                      </Text>
+                    )}
+
+                    {/* Botões só aparecem quando a consulta está agendada */}
+                    {consulta.status === "agendada" && (
+                      <View style={styles.acoesContainer}>
+                        <TouchableOpacity
+                          style={[styles.botaoAcao, styles.botaoConfirmar]}
+                          onPress={() => handleConfirmarConsulta(consulta)}
+                        >
+                          <Text style={styles.botaoAcaoTexto}>✓ Confirmar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={[styles.botaoAcao, styles.botaoCancelarAcao]}
+                          onPress={() => handleCancelarConsulta(consulta)}
+                        >
+                          <Text style={styles.botaoAcaoTexto}>✗ Cancelar</Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                  </View>
+                ))}
               </>
             )}
           </>
         }
       />
+
+      {/* ─── MODAL DE AGENDAMENTO ─── */}
+      <Modal
+        visible={mostrarForm}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setMostrarForm(false)}
+      >
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.modalOverlay}
+        >
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitulo}>Nova Consulta</Text>
+            <ScrollView>
+              <Text style={styles.inputLabel}>ID do Médico *</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Ex: 1"
+                keyboardType="numeric"
+                value={formMedicoId}
+                onChangeText={setFormMedicoId}
+              />
+
+              <Text style={styles.inputLabel}>ID do Paciente *</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Ex: 1"
+                keyboardType="numeric"
+                value={formPacienteId}
+                onChangeText={setFormPacienteId}
+              />
+
+              <Text style={styles.inputLabel}>Data e Hora * (YYYY-MM-DDTHH:MM:SS)</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="2026-05-25T10:00:00"
+                value={formDataHora}
+                onChangeText={setFormDataHora}
+              />
+
+              <Text style={styles.inputLabel}>Valor (R$) *</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Ex: 250"
+                keyboardType="numeric"
+                value={formValor}
+                onChangeText={setFormValor}
+              />
+
+              <Text style={styles.inputLabel}>Observações (opcional)</Text>
+              <TextInput
+                style={[styles.input, styles.inputMultilinha]}
+                placeholder="Ex: Consulta de rotina"
+                value={formObservacoes}
+                onChangeText={setFormObservacoes}
+                multiline
+                numberOfLines={3}
+              />
+
+              <TouchableOpacity
+                style={[
+                  styles.botaoSalvar,
+                  salvando && styles.botaoDesabilitado,
+                ]}
+                onPress={handleAgendarConsulta}
+                disabled={salvando}
+              >
+                {salvando ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={styles.botaoSalvarTexto}>Agendar Consulta</Text>
+                )}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.botaoCancelarModal}
+                onPress={() => setMostrarForm(false)}
+              >
+                <Text style={styles.botaoCancelarModalTexto}>Cancelar</Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
     </View>
   );
 }
@@ -150,6 +424,8 @@ const styles = StyleSheet.create({
     color: "#91c787",
     marginBottom: 12,
   },
+  secaoHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 24, marginBottom: 12 },
+  secaoTituloConsultas: { fontSize: 18, fontWeight: "bold", color: "#fff" },
   card: {
     width: "80%",
     padding: 24,
@@ -168,6 +444,11 @@ const styles = StyleSheet.create({
     color: "#666",
     marginBottom: 2,
   },
+  cardObservacoes: {
+    fontSize: 13,
+    color: "#888",
+    fontStyle: "italic",
+    marginTop: 4 },
   badge: {
     alignSelf: "flex-start",
     borderRadius: 6,
@@ -186,6 +467,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#333",
   },
+  statusBadge: { alignSelf: "flex-start", borderRadius: 6, paddingHorizontal: 10, paddingVertical: 3, marginBottom: 8 },
+  statusTexto: { fontSize: 11, fontWeight: "bold" },
+  acoesContainer: { flexDirection: "row", gap: 8, marginTop: 10 },
+  botaoAcao: { flex: 1, borderRadius: 8, padding: 10, alignItems: "center" },
+  botaoConfirmar: { backgroundColor: "#28a745" },
+  botaoCancelarAcao: { backgroundColor: "#dc3545" },
+  botaoAcaoTexto: { color: "#fff", fontWeight: "bold", fontSize: 13 },
+  botaoAgendar: { backgroundColor: "#fff", borderRadius: 8, paddingHorizontal: 14, paddingVertical: 8 },
+  botaoAgendarTexto: { color: "#79059C", fontWeight: "bold", fontSize: 14 },
   erroContainer: {
     marginTop: 24,
     padding: 16,
@@ -200,6 +490,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
     lineHeight: 22,
   },
+  modalOverlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "flex-end" },
+  modalContainer: { backgroundColor: "#fff", borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: 24, maxHeight: "85%" },
+  modalTitulo: { fontSize: 20, fontWeight: "bold", color: "#333", marginBottom: 20, textAlign: "center" },
+  inputLabel: { fontSize: 14, fontWeight: "600", color: "#555", marginBottom: 6 },
+  input: { borderWidth: 1, borderColor: "#ddd", borderRadius: 8, padding: 12, fontSize: 15, marginBottom: 16, color: "#333" },
+  inputMultilinha: { height: 80, textAlignVertical: "top" },
+  botaoSalvar: { backgroundColor: "#79059C", borderRadius: 10, padding: 16, alignItems: "center", marginBottom: 12 },
+  botaoDesabilitado: { opacity: 0.6 },
+  botaoSalvarTexto: { color: "#fff", fontWeight: "bold", fontSize: 16 },
+  botaoCancelarModal: { borderWidth: 1, borderColor: "#ccc", borderRadius: 10, padding: 14, alignItems: "center", marginBottom: 8 },
+  botaoCancelarModalTexto: { color: "#666", fontSize: 15 },
   scrollContent: {
     padding: 20,
     paddingTop: 60,
