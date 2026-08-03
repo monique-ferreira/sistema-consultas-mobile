@@ -14,8 +14,6 @@ import { Medico } from "./src/interfaces/medico";
 import { listarMedicos } from "./src/services/medicoService";
 import { Consulta } from "./src/interfaces/consulta";
 
-import { ConsultaCard } from "./src/components";
-
 export default function App() {
   const [medicos, setMedicos] = useState<Medico[]>([]);
   const [pacientes, setPacientes] = useState<Paciente[]>([]);
