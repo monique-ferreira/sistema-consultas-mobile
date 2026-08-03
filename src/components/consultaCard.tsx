@@ -60,7 +60,7 @@ export default function ConsultaCard({
 
             <View style={styles.secao}>
                 <Text style={styles.label}>Dados da Consulta</Text>
-                <Text style={styles.valor}>Data: {formatarData(consulta.data)}</Text>
+                <Text style={styles.valor}>Data: {formatarData(consulta.dataHora)}</Text>
                 <Text style={styles.valor}>Valor: {formatarValor(consulta.valor)}</Text>
                 <Text style={styles.info}>Email: {consulta.paciente.email}</Text>
                 {consulta.observacoes && (
