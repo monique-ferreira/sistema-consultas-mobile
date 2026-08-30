@@ -134,7 +134,7 @@ export default function ConsultasMedicoScreen({ navigation, route }: Props) {
                 ListEmptyComponent={
                     carregando ? (
                         <ActivityIndicator
-                            color="#fff"
+                            color="#1A2E4A"
                             size="large"
                             style={{ marginTop: 40 }}
                         />
@@ -233,7 +233,7 @@ export default function ConsultasMedicoScreen({ navigation, route }: Props) {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: "#79059C" },
+    container: { flex: 1, backgroundColor: "#8FC5FF" },
     listContent: { padding: 20, paddingBottom: 40 },
     cabecalho: {
         flexDirection: "row",
@@ -241,10 +241,10 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         marginBottom: 20,
     },
-    titulo: { fontSize: 22, fontWeight: "bold", color: "#fff" },
+    titulo: { fontSize: 22, fontWeight: "bold", color: "#1A2E4A" },
     subtitulo: {
         fontSize: 13,
-        color: "rgba(255,255,255,0.75)",
+        color: "rgba(26,46,74,0.65)",
         marginTop: 2,
     },
     card: {
@@ -290,23 +290,23 @@ const styles = StyleSheet.create({
     botaoAcaoTexto: { color: "#fff", fontWeight: "bold", fontSize: 14 },
     botaoDesabilitado: { opacity: 0.5 },
     botaoSair: {
-        backgroundColor: "rgba(255,255,255,0.2)",
+        backgroundColor: "rgba(26,46,74,0.1)",
         borderWidth: 1,
-        borderColor: "#fff",
+        borderColor: "#1A2E4A",
         borderRadius: 8,
         paddingHorizontal: 14,
         paddingVertical: 8,
     },
-    botaoSairTexto: { color: "#fff", fontWeight: "bold", fontSize: 14 },
+    botaoSairTexto: { color: "#1A2E4A", fontWeight: "bold", fontSize: 14 },
     vazio: {
-        backgroundColor: "rgba(255,255,255,0.1)",
+        backgroundColor: "rgba(26,46,74,0.06)",
         borderRadius: 12,
         padding: 24,
         alignItems: "center",
         marginTop: 20,
     },
     vazioTexto: {
-        color: "#fff",
+        color: "#1A2E4A",
         fontSize: 14,
         textAlign: "center",
         lineHeight: 22,

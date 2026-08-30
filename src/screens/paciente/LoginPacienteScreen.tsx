@@ -108,18 +108,18 @@ export default function LoginPacienteScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: "#7edbff" },
+    container: { flex: 1, backgroundColor: "#8FC5FF" },
     content: { flexGrow: 1, justifyContent: "center", padding: 24 },
     titulo: {
         fontSize: 28,
         fontWeight: "bold",
-        color: "#fff",
+        color: "#1A2E4A",
         textAlign: "center",
         marginBottom: 8,
     },
     subtitulo: {
         fontSize: 14,
-        color: "rgba(255,255,255,0.8)",
+        color: "rgba(26,46,74,0.7)",
         textAlign: "center",
         marginBottom: 32,
     },
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     botao: {
-        backgroundColor: "#7edbff",
+        backgroundColor: "#2563A8",
         borderRadius: 10,
         padding: 15,
         alignItems: "center",
@@ -163,13 +163,13 @@ const styles = StyleSheet.create({
     separadorTexto: { marginHorizontal: 10, color: "#aaa", fontSize: 13 },
     botaoSecundario: {
         borderWidth: 1,
-        borderColor: "#7edbff",
+        borderColor: "#2563A8",
         borderRadius: 10,
         padding: 14,
         alignItems: "center",
     },
     botaoSecundarioTexto: {
-        color: "#7edbff",
+        color: "#2563A8",
         fontWeight: "600",
         fontSize: 14,
     },

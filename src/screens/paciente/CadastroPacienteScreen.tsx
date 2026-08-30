@@ -130,18 +130,18 @@ export default function CadastroPacienteScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: "#79059C" },
+    container: { flex: 1, backgroundColor: "#8FC5FF" },
     content: { flexGrow: 1, justifyContent: "center", padding: 24 },
     titulo: {
         fontSize: 28,
         fontWeight: "bold",
-        color: "#fff",
+        color: "#1A2E4A",
         textAlign: "center",
         marginBottom: 8,
     },
     subtitulo: {
         fontSize: 14,
-        color: "rgba(255,255,255,0.8)",
+        color: "rgba(26,46,74,0.7)",
         textAlign: "center",
         marginBottom: 32,
     },
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     botao: {
-        backgroundColor: "#7edbff",
+        backgroundColor: "#2563A8",
         borderRadius: 10,
         padding: 15,
         alignItems: "center",

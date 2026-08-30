@@ -17,7 +17,7 @@ type Props = {
 export default function HomeScreen({ navigation }: Props) {
     return (
         <SafeAreaView style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor="#8df78d" />
+            <StatusBar barStyle="dark-content" backgroundColor="#8FC5FF" />
             <View style={styles.content}>
                 <Text style={styles.titulo}>Sistema de Consultas</Text>
                 <Text style={styles.subtitulo}>Como deseja acessar?</Text>
@@ -55,7 +55,7 @@ export default function HomeScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#9ff38a",
+        backgroundColor: "#8FC5FF",
     },
     content: {
         flex: 1,
@@ -66,13 +66,13 @@ const styles = StyleSheet.create({
     titulo: {
         fontSize: 32,
         fontWeight: "bold",
-        color: "#fff",
+        color: "#1A2E4A",
         textAlign: "center",
         marginBottom: 8,
     },
     subtitulo: {
         fontSize: 16,
-        color: "rgba(255,255,255,0.8)",
+        color: "rgba(26,46,74,0.7)",
         textAlign: "center",
         marginBottom: 52,
     },
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     botaoTitulo: {
         fontSize: 20,
         fontWeight: "bold",
-        color: "#79059C",
+        color: "#2563A8",
         marginBottom: 4,
     },
     botaoDescricao: {

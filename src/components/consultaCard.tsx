@@ -76,7 +76,7 @@ export default function ConsultaCard({
                                 <Button
                                     title="Confirmar Consulta"
                                     onPress={onConfirmar}
-                                    color="#91C787"
+                                    color="#2563A8"
                                 />
                             </View>
                         )}
@@ -85,7 +85,7 @@ export default function ConsultaCard({
                                 <Button
                                     title="Cancelar Consulta"
                                     onPress={onCancelar}
-                                    color="#91C787"
+                                    color="#2563A8"
                                 />
                             </View>
                         )}
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 16,
         fontWeight: "bold",
-        color: "#91C787",
+        color: "#2563A8",
         marginBottom: 8,
     },
     valor: {

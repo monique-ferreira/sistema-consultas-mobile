@@ -202,18 +202,18 @@ export default function CadastroMedicoScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: "#79059C" },
+    container: { flex: 1, backgroundColor: "#8FC5FF" },
     content: { flexGrow: 1, justifyContent: "center", padding: 24 },
     titulo: {
         fontSize: 28,
         fontWeight: "bold",
-        color: "#fff",
+        color: "#1A2E4A",
         textAlign: "center",
         marginBottom: 8,
     },
     subtitulo: {
         fontSize: 14,
-        color: "rgba(255,255,255,0.8)",
+        color: "rgba(26,46,74,0.7)",
         textAlign: "center",
         marginBottom: 32,
     },
@@ -245,17 +245,17 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
     seletorAberto: {
-        borderColor: "#79059C",
+        borderColor: "#2563A8",
         borderBottomLeftRadius: 0,
         borderBottomRightRadius: 0,
         borderBottomWidth: 0,
     },
     seletorTexto: { fontSize: 15, color: "#333" },
     seletorPlaceholder: { color: "#aaa" },
-    seletorSeta: { fontSize: 12, color: "#79059C" },
+    seletorSeta: { fontSize: 12, color: "#2563A8" },
     listaEspecialidades: {
         borderWidth: 1,
-        borderColor: "#79059C",
+        borderColor: "#2563A8",
         borderTopWidth: 0,
         borderBottomLeftRadius: 8,
         borderBottomRightRadius: 8,
@@ -265,12 +265,12 @@ const styles = StyleSheet.create({
     itemEspecialidade: {
         padding: 12,
         borderTopWidth: 1,
-        borderTopColor: "#f0e6f5",
+        borderTopColor: "#EBF4FF",
         backgroundColor: "#fff",
     },
-    itemSelecionado: { backgroundColor: "#f0e6f5" },
+    itemSelecionado: { backgroundColor: "#EBF4FF" },
     itemTexto: { fontSize: 15, color: "#333" },
-    itemTextoSelecionado: { color: "#79059C", fontWeight: "600" },
+    itemTextoSelecionado: { color: "#2563A8", fontWeight: "600" },
     erroTexto: {
         color: "#c0392b",
         fontSize: 13,
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     botao: {
-        backgroundColor: "#79059C",
+        backgroundColor: "#2563A8",
         borderRadius: 10,
         padding: 15,
         alignItems: "center",

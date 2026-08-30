@@ -66,7 +66,7 @@ export default function PerfilMedicoScreen({ navigation, route }: Props) {
     if (carregando) {
         return (
             <View style={styles.loadingContainer}>
-                <ActivityIndicator color="#fff" size="large" />
+                <ActivityIndicator color="#1A2E4A" size="large" />
             </View>
         );
     }
@@ -135,10 +135,10 @@ export default function PerfilMedicoScreen({ navigation, route }: Props) {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: "#79059C" },
+    container: { flex: 1, backgroundColor: "#8FC5FF" },
     loadingContainer: {
         flex: 1,
-        backgroundColor: "#79059C",
+        backgroundColor: "#8FC5FF",
         justifyContent: "center",
         alignItems: "center",
     },
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     titulo: {
         fontSize: 24,
         fontWeight: "bold",
-        color: "#fff",
+        color: "#1A2E4A",
         textAlign: "center",
         marginBottom: 20,
     },
@@ -161,16 +161,16 @@ const styles = StyleSheet.create({
     },
     avisoTexto: { fontSize: 13, color: "#856404", lineHeight: 18 },
     infoMedico: {
-        backgroundColor: "#f0e6f5",
+        backgroundColor: "#EBF4FF",
         borderRadius: 10,
         padding: 14,
         marginBottom: 20,
     },
-    infoLabel: { fontSize: 12, color: "#79059C", fontWeight: "600" },
+    infoLabel: { fontSize: 12, color: "#2563A8", fontWeight: "600" },
     infoNome: {
         fontSize: 16,
         fontWeight: "bold",
-        color: "#4a0070",
+        color: "#1A5BA8",
         marginTop: 2,
     },
     infoEsp: { fontSize: 13, color: "#666", marginTop: 2 },
@@ -198,13 +198,13 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     botao: {
-        backgroundColor: "#79059C",
+        backgroundColor: "#2563A8",
         borderRadius: 10,
         padding: 15,
         alignItems: "center",
         marginTop: 4,
     },
-    botaoDesabilitado: { backgroundColor: "#b57bc0" },
+    botaoDesabilitado: { backgroundColor: "#93BCEB" },
     botaoTexto: { color: "#fff", fontSize: 16, fontWeight: "bold" },
 });
 

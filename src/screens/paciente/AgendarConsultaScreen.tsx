@@ -183,12 +183,12 @@ export default function AgendarConsultaScreen({ navigation, route }: Props) {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: "#7edbff" },
+    container: { flex: 1, backgroundColor: "#8FC5FF" },
     content: { flexGrow: 1, padding: 24, paddingTop: 20, paddingBottom: 40 },
     titulo: {
         fontSize: 24,
         fontWeight: "bold",
-        color: "#fff",
+        color: "#1A2E4A",
         textAlign: "center",
         marginBottom: 20,
     },
@@ -198,28 +198,28 @@ const styles = StyleSheet.create({
         padding: 24,
     },
     infoMedico: {
-        backgroundColor: "#f0e6f5",
+        backgroundColor: "#EBF4FF",
         borderRadius: 10,
         padding: 14,
         marginBottom: 20,
     },
-    infoMedicoLabel: { fontSize: 12, color: "#7edbff", fontWeight: "600" },
+    infoMedicoLabel: { fontSize: 12, color: "#2563A8", fontWeight: "600" },
     infoMedicoNome: {
         fontSize: 16,
         fontWeight: "bold",
-        color: "#08658a",
+        color: "#1A5BA8",
         marginTop: 2,
     },
     label: { fontSize: 14, fontWeight: "600", color: "#555", marginBottom: 4 },
     hint: { fontSize: 12, color: "#999", marginBottom: 12 },
     dataSelecionada: {
         fontSize: 14,
-        color: "#7edbff",
+        color: "#2563A8",
         fontWeight: "600",
         textAlign: "center",
         marginTop: 4,
         marginBottom: 16,
-        backgroundColor: "#f0e6f5",
+        backgroundColor: "#EBF4FF",
         borderRadius: 8,
         padding: 10,
     },
@@ -262,12 +262,12 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     botao: {
-        backgroundColor: "#7edbff",
+        backgroundColor: "#2563A8",
         borderRadius: 10,
         padding: 15,
         alignItems: "center",
     },
-    botaoDesabilitado: { backgroundColor: "#b57bc0" },
+    botaoDesabilitado: { backgroundColor: "#93BCEB" },
     botaoTexto: { color: "#fff", fontSize: 16, fontWeight: "bold" },
 });
 
