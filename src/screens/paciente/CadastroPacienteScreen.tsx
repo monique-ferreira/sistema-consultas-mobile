@@ -13,6 +13,7 @@ import {
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/types";
 import { cadastrarPaciente } from "../../services/pacienteService";
+import { mensagemErroApi } from "../../utils/apiErro";
 
 type Props = {
     navigation: NativeStackNavigationProp<RootStackParamList, "CadastroPaciente">;
@@ -50,8 +51,8 @@ export default function CadastroPacienteScreen({ navigation }: Props) {
                 pacienteId: paciente.id,
                 pacienteNome: paciente.nome,
             });
-        } catch {
-            setErro("Erro ao cadastrar. CPF ou e-mail ja podem estar em uso.");
+        } catch (e) {
+            setErro(mensagemErroApi(e, "Erro ao cadastrar. CPF ou e-mail ja podem estar em uso."));
         } finally {
             setSalvando(false);
         }
@@ -175,4 +176,3 @@ const styles = StyleSheet.create({
     botaoDesabilitado: { opacity: 0.6 },
     botaoTexto: { color: "#fff", fontWeight: "bold", fontSize: 16 },
 });
-
