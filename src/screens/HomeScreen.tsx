@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     View,
     Text,
@@ -6,21 +6,57 @@ import {
     TouchableOpacity,
     SafeAreaView,
     StatusBar,
+    ActivityIndicator
 } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/types";
+import { healthCheck } from "../services/api";
 
 type Props = {
     navigation: NativeStackNavigationProp<RootStackParamList, "Home">;
 };
 
+type StatusServico = "verificando" | "online" | "offline";
+
 export default function HomeScreen({ navigation }: Props) {
+
+    const [statusServico, setStatusServico] = useState<StatusServico>("verificando");
+
+    useEffect(() => {
+        verificarServico();
+    }, []);
+
+    async function verificarServico() {
+        setStatusServico("verificando");
+        const disponivel = await healthCheck();
+        setStatusServico(disponivel ? "online" : "offline");
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor="#8FC5FF" />
             <View style={styles.content}>
                 <Text style={styles.titulo}>Sistema de Consultas</Text>
                 <Text style={styles.subtitulo}>Como deseja acessar?</Text>
+
+                {/* Banner de status do serviço */}
+                {statusServico === "verificando" && (
+                    <View style={[styles.banner, styles.bannerVerificando]}>
+                        <ActivityIndicator size="small" color="#fff" style={{ marginRight: 8 }} />
+                        <Text style={styles.bannerTexto}>Verificando conexão com o servidor...</Text>
+                    </View>
+                )}
+
+                {statusServico === "offline" && (
+                    <View style={[styles.banner, styles.bannerOffline]}>
+                        <Text style={styles.bannerTexto}>
+                            ⚠️ Servidor indisponível. Tente novamente mais tarde.
+                        </Text>
+                        <TouchableOpacity onPress={verificarServico} style={styles.tentarNovamenteBotao}>
+                            <Text style={styles.tentarNovamenteTexto}>Tentar novamente</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
 
                 {/* Botao Paciente */}
                 <TouchableOpacity
@@ -76,6 +112,40 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginBottom: 52,
     },
+    banner: {
+        width: "100%",
+        borderRadius: 12,
+        padding: 14,
+        marginBottom: 20,
+        alignItems: "center",
+    },
+    bannerVerificando: {
+        backgroundColor: "rgba(255,255,255,0.15)",
+        flexDirection: "row",
+    },
+    bannerOffline: {
+        backgroundColor: "rgba(243, 108, 121, 0.85)",
+    },
+    bannerTexto: {
+        color: "#fff",
+        fontSize: 13,
+        textAlign: "center",
+        fontWeight: "500",
+    },
+    tentarNovamenteBotao: {
+        marginTop: 10,
+        borderWidth: 1,
+        borderColor: "#fff",
+        borderRadius: 8,
+        paddingHorizontal: 16,
+        paddingVertical: 6,
+    },
+    tentarNovamenteTexto: {
+        color: "#fff",
+        fontSize: 13,
+        fontWeight: "600",
+    },
+
     botao: {
         width: "100%",
         backgroundColor: "#fff",
