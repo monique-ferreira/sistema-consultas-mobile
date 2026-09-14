@@ -1,27 +1,18 @@
-/**
- * Estilos do componente ConsultaCard
- *
- * Separados da lógica para facilitar manutenção e reuso.
- * O componente em si (ConsultaCard.tsx) cuida apenas de JSX e lógica.
- *
- * Regra: este arquivo só importa StyleSheet - nada de React, nada de lógica.
- */
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-  // Container principal do card
   card: {
-    backgroundColor: "#fff",
-    borderRadius: 16,
-    padding: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 5,
+    width: "80%",
+    padding: 24,
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: "#d4d4d4",
   },
-
-  // Badge de status (agendada, confirmada, cancelada)
+  button: {
+    marginTop: 8,
+    borderRadius: 8,
+    overflow: "hidden",
+  },
   statusBadge: {
     backgroundColor: "#FFA500",
     alignSelf: "flex-start",
@@ -41,7 +32,6 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 12,
   },
-
   secao: {
     marginBottom: 20,
     paddingBottom: 20,
@@ -51,7 +41,7 @@ export const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#79059C",
+    color: "#2563A8",
     marginBottom: 8,
   },
   valor: {
