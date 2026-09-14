@@ -2,7 +2,6 @@ import React, { useState, useCallback } from "react";
 import {
     View,
     Text,
-    StyleSheet,
     FlatList,
     TouchableOpacity,
     ActivityIndicator,
@@ -12,13 +11,13 @@ import { RouteProp, useFocusEffect } from "@react-navigation/native";
 import { RootStackParamList } from "../../navigation/types";
 import { listarConsultasPorPaciente } from "../../services/consultaService";
 import { Consulta } from "../../interfaces/consulta";
+import { styles } from "../../styles/minhasConsultas.styles";
 
 type Props = {
     navigation: NativeStackNavigationProp<RootStackParamList, "MinhasConsultas">;
     route: RouteProp<RootStackParamList, "MinhasConsultas">;
 };
 
-// Cores de fundo dos badges de status
 const STATUS_FUNDO: Record<string, string> = {
     agendada: "#e3f2fd",
     confirmada: "#d4edda",
@@ -26,7 +25,6 @@ const STATUS_FUNDO: Record<string, string> = {
     cancelada: "#f8d7da",
 };
 
-// Cores do texto dos badges de status
 const STATUS_COR: Record<string, string> = {
     agendada: "#1565c0",
     confirmada: "#155724",
@@ -34,7 +32,6 @@ const STATUS_COR: Record<string, string> = {
     cancelada: "#721c24",
 };
 
-// Texto amigavel para cada status
 const STATUS_LABEL: Record<string, string> = {
     agendada: "AGUARDANDO CONFIRMACAO",
     confirmada: "CONFIRMADA",
@@ -58,8 +55,6 @@ export default function MinhasConsultasScreen({ navigation, route }: Props) {
     const [carregando, setCarregando] = useState(true);
     const [atualizando, setAtualizando] = useState(false);
 
-    // useFocusEffect recarrega os dados cada vez que a tela fica visivel.
-    // Isso garante que, ao voltar da tela de agendamento, a lista esta atualizada.
     useFocusEffect(
         useCallback(() => {
             carregarConsultas();
@@ -142,7 +137,6 @@ export default function MinhasConsultasScreen({ navigation, route }: Props) {
                 }
                 renderItem={({ item: consulta }) => (
                     <View style={styles.card}>
-                        {/* Badge de status */}
                         <View
                             style={[
                                 styles.badge,
@@ -181,78 +175,3 @@ export default function MinhasConsultasScreen({ navigation, route }: Props) {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: "#8FC5FF" },
-    listContent: { padding: 20, paddingBottom: 40 },
-    cabecalho: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-        marginBottom: 20,
-    },
-    titulo: { fontSize: 22, fontWeight: "bold", color: "#1A2E4A" },
-    subtitulo: {
-        fontSize: 13,
-        color: "rgba(26,46,74,0.65)",
-        marginTop: 2,
-    },
-    botaoAgendar: {
-        backgroundColor: "#fff",
-        borderRadius: 8,
-        paddingHorizontal: 14,
-        paddingVertical: 8,
-    },
-    botaoAgendarTexto: { color: "#2563A8", fontWeight: "bold", fontSize: 14 },
-    cabecalhoAcoes: { flexDirection: "row", gap: 8, alignItems: "center" },
-    botaoSair: {
-        backgroundColor: "rgba(26,46,74,0.1)",
-        borderWidth: 1,
-        borderColor: "#1A2E4A",
-        borderRadius: 8,
-        paddingHorizontal: 14,
-        paddingVertical: 8,
-    },
-    botaoSairTexto: { color: "#1A2E4A", fontWeight: "bold", fontSize: 14 },
-    card: {
-        backgroundColor: "#fff",
-        borderRadius: 12,
-        padding: 16,
-        marginBottom: 12,
-    },
-    cardMedico: {
-        fontSize: 16,
-        fontWeight: "bold",
-        color: "#333",
-        marginBottom: 4,
-    },
-    cardInfo: { fontSize: 14, color: "#666", marginBottom: 2 },
-    cardObs: {
-        fontSize: 13,
-        color: "#888",
-        fontStyle: "italic",
-        marginTop: 4,
-    },
-    badge: {
-        alignSelf: "flex-start",
-        borderRadius: 6,
-        paddingHorizontal: 10,
-        paddingVertical: 3,
-        marginBottom: 8,
-    },
-    badgeTexto: { fontSize: 11, fontWeight: "bold" },
-    vazio: {
-        backgroundColor: "rgba(26,46,74,0.06)",
-        borderRadius: 12,
-        padding: 24,
-        alignItems: "center",
-        marginTop: 20,
-    },
-    vazioTexto: {
-        color: "#1A2E4A",
-        fontSize: 14,
-        textAlign: "center",
-        lineHeight: 22,
-    },
-});
-
