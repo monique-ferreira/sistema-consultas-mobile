@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
     View,
     Text,
-    StyleSheet,
     TextInput,
     TouchableOpacity,
     ActivityIndicator,
@@ -16,6 +15,7 @@ import { cadastrarMedico } from "../../services/medicoService";
 import { listarEspecialidades } from "../../services/especialidadeService";
 import { Especialidade } from "../../types/especialidade";
 import { mensagemErroApi } from "../../utils/apiErro";
+import { styles } from "../../styles/cadastroMedico.styles";
 
 type Props = {
     navigation: NativeStackNavigationProp<RootStackParamList, "CadastroMedico">;
@@ -94,7 +94,6 @@ export default function CadastroMedicoScreen({ navigation }: Props) {
                 </Text>
 
                 <View style={styles.formulario}>
-                    {/* Nome */}
                     <Text style={styles.label}>Nome completo * (inclua Dr. ou Dra.)</Text>
                     <TextInput
                         style={styles.input}
@@ -103,7 +102,6 @@ export default function CadastroMedicoScreen({ navigation }: Props) {
                         onChangeText={setNome}
                     />
 
-                    {/* CRM */}
                     <Text style={styles.label}>CRM * (somente numeros)</Text>
                     <TextInput
                         style={styles.input}
@@ -113,7 +111,6 @@ export default function CadastroMedicoScreen({ navigation }: Props) {
                         onChangeText={(text) => setCrm(text.replace(/\D/g, ""))}
                     />
 
-                    {/* Especialidade */}
                     <Text style={styles.label}>Especialidade *</Text>
                     <TouchableOpacity
                         style={[
@@ -167,7 +164,6 @@ export default function CadastroMedicoScreen({ navigation }: Props) {
                         </View>
                     )}
 
-                    {/* Valor */}
                     <Text style={[styles.label, { marginTop: 16 }]}>
                         Valor da Consulta (opcional)
                     </Text>
@@ -200,90 +196,3 @@ export default function CadastroMedicoScreen({ navigation }: Props) {
         </KeyboardAvoidingView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: "#8FC5FF" },
-    content: { flexGrow: 1, justifyContent: "center", padding: 24 },
-    titulo: {
-        fontSize: 28,
-        fontWeight: "bold",
-        color: "#1A2E4A",
-        textAlign: "center",
-        marginBottom: 8,
-    },
-    subtitulo: {
-        fontSize: 14,
-        color: "rgba(26,46,74,0.7)",
-        textAlign: "center",
-        marginBottom: 32,
-    },
-    formulario: {
-        backgroundColor: "#fff",
-        borderRadius: 16,
-        padding: 24,
-    },
-    label: { fontSize: 14, fontWeight: "600", color: "#555", marginBottom: 6 },
-    input: {
-        borderWidth: 1,
-        borderColor: "#ddd",
-        borderRadius: 8,
-        padding: 12,
-        fontSize: 15,
-        marginBottom: 16,
-        color: "#333",
-    },
-    hint: { fontSize: 12, color: "#999", marginBottom: 16, marginTop: -12 },
-    seletor: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        borderWidth: 1,
-        borderColor: "#ddd",
-        borderRadius: 8,
-        padding: 12,
-        marginBottom: 0,
-        backgroundColor: "#fff",
-    },
-    seletorAberto: {
-        borderColor: "#2563A8",
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
-        borderBottomWidth: 0,
-    },
-    seletorTexto: { fontSize: 15, color: "#333" },
-    seletorPlaceholder: { color: "#aaa" },
-    seletorSeta: { fontSize: 12, color: "#2563A8" },
-    listaEspecialidades: {
-        borderWidth: 1,
-        borderColor: "#2563A8",
-        borderTopWidth: 0,
-        borderBottomLeftRadius: 8,
-        borderBottomRightRadius: 8,
-        marginBottom: 16,
-        overflow: "hidden",
-    },
-    itemEspecialidade: {
-        padding: 12,
-        borderTopWidth: 1,
-        borderTopColor: "#EBF4FF",
-        backgroundColor: "#fff",
-    },
-    itemSelecionado: { backgroundColor: "#EBF4FF" },
-    itemTexto: { fontSize: 15, color: "#333" },
-    itemTextoSelecionado: { color: "#2563A8", fontWeight: "600" },
-    erroTexto: {
-        color: "#c0392b",
-        fontSize: 13,
-        marginBottom: 12,
-        textAlign: "center",
-    },
-    botao: {
-        backgroundColor: "#2563A8",
-        borderRadius: 10,
-        padding: 15,
-        alignItems: "center",
-        marginTop: 4,
-    },
-    botaoDesabilitado: { opacity: 0.6 },
-    botaoTexto: { color: "#fff", fontWeight: "bold", fontSize: 16 },
-});

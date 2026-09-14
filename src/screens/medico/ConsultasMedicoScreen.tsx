@@ -2,7 +2,6 @@ import React, { useState, useCallback } from "react";
 import {
     View,
     Text,
-    StyleSheet,
     FlatList,
     TouchableOpacity,
     ActivityIndicator,
@@ -16,6 +15,7 @@ import {
     cancelarConsulta,
 } from "../../services/consultaService";
 import { Consulta } from "../../interfaces/consulta";
+import { styles } from "../../styles/consultasMedico.styles";
 
 type Props = {
     navigation: NativeStackNavigationProp<RootStackParamList, "ConsultasMedico">;
@@ -58,10 +58,8 @@ export default function ConsultasMedicoScreen({ navigation, route }: Props) {
     const [consultas, setConsultas] = useState<Consulta[]>([]);
     const [carregando, setCarregando] = useState(true);
     const [atualizando, setAtualizando] = useState(false);
-    // Rastreia qual consulta esta sendo processada para desabilitar botoes
     const [processando, setProcessando] = useState<number | null>(null);
 
-    // Recarrega sempre que a tela fica visivel
     useFocusEffect(
         useCallback(() => {
             carregarConsultas();
@@ -151,7 +149,6 @@ export default function ConsultasMedicoScreen({ navigation, route }: Props) {
                     const emProcessamento = processando === consulta.id;
                     return (
                         <View style={styles.card}>
-                            {/* Badge de status */}
                             <View
                                 style={[
                                     styles.badge,
@@ -188,7 +185,6 @@ export default function ConsultasMedicoScreen({ navigation, route }: Props) {
                                 <Text style={styles.cardObs}>{consulta.observacoes}</Text>
                             )}
 
-                            {/* Acoes apenas para consultas com status "agendada" */}
                             {consulta.status === "agendada" && (
                                 <View style={styles.acoes}>
                                     <TouchableOpacity
@@ -231,85 +227,3 @@ export default function ConsultasMedicoScreen({ navigation, route }: Props) {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: "#8FC5FF" },
-    listContent: { padding: 20, paddingBottom: 40 },
-    cabecalho: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-        marginBottom: 20,
-    },
-    titulo: { fontSize: 22, fontWeight: "bold", color: "#1A2E4A" },
-    subtitulo: {
-        fontSize: 13,
-        color: "rgba(26,46,74,0.65)",
-        marginTop: 2,
-    },
-    card: {
-        backgroundColor: "#fff",
-        borderRadius: 12,
-        padding: 16,
-        marginBottom: 12,
-    },
-    cardPaciente: {
-        fontSize: 16,
-        fontWeight: "bold",
-        color: "#333",
-        marginBottom: 4,
-    },
-    cardInfo: { fontSize: 14, color: "#666", marginBottom: 2 },
-    cardObs: {
-        fontSize: 13,
-        color: "#888",
-        fontStyle: "italic",
-        marginTop: 4,
-    },
-    badge: {
-        alignSelf: "flex-start",
-        borderRadius: 6,
-        paddingHorizontal: 10,
-        paddingVertical: 3,
-        marginBottom: 8,
-    },
-    badgeTexto: { fontSize: 11, fontWeight: "bold" },
-    acoes: {
-        flexDirection: "row",
-        gap: 10,
-        marginTop: 12,
-    },
-    botaoAcao: {
-        flex: 1,
-        borderRadius: 8,
-        paddingVertical: 10,
-        alignItems: "center",
-    },
-    botaoConfirmar: { backgroundColor: "#27ae60" },
-    botaoCancelar: { backgroundColor: "#e74c3c" },
-    botaoAcaoTexto: { color: "#fff", fontWeight: "bold", fontSize: 14 },
-    botaoDesabilitado: { opacity: 0.5 },
-    botaoSair: {
-        backgroundColor: "rgba(26,46,74,0.1)",
-        borderWidth: 1,
-        borderColor: "#1A2E4A",
-        borderRadius: 8,
-        paddingHorizontal: 14,
-        paddingVertical: 8,
-    },
-    botaoSairTexto: { color: "#1A2E4A", fontWeight: "bold", fontSize: 14 },
-    vazio: {
-        backgroundColor: "rgba(26,46,74,0.06)",
-        borderRadius: 12,
-        padding: 24,
-        alignItems: "center",
-        marginTop: 20,
-    },
-    vazioTexto: {
-        color: "#1A2E4A",
-        fontSize: 14,
-        textAlign: "center",
-        lineHeight: 22,
-    },
-});
-
